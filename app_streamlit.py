@@ -7,9 +7,24 @@ from one_rm_core import (
 
 st.set_page_config(page_title="Class Workout 105 — 1RM Helper", layout="centered", initial_sidebar_state="expanded")
 
+# Read default from URL (?inline=1)
+qs = st.query_params
+default_inline = qs.get("inline", "0") == "1"
+
 st.title("Class Workout 105 — 1 Rep Max Helper")
 selected_ex_placeholder = st.empty()
-mobile_inputs = st.toggle("Show inputs inline (mobile)", value=False, help="If the sidebar is hidden on a small screen, turn this on to show the inputs below.")
+mobile_inputs = st.toggle(
+    "Show inputs inline (mobile)",
+    value=default_inline,
+    key="inline_toggle",
+    help="If the sidebar is hidden on a small screen, turn this on to show the inputs below."
+)
+
+# Keep the URL in sync with the toggle so you can bookmark / add to Home Screen
+if st.session_state.get("inline_toggle"):
+    st.query_params["inline"] = "1"
+else:
+    st.query_params.pop("inline", None)
 
 EXERCISES = [
     "Bench Press",
