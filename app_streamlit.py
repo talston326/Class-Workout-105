@@ -65,41 +65,40 @@ EXERCISES = [
 BARBELL = {"Bench Press": True, "Incline Bench": True}
 
 if mobile_inputs:
-    exp = st.expander("Inputs (mobile)", expanded=True)
-    with exp:
-        st.header("Inputs")
-        ex = st.selectbox("Exercise", EXERCISES, index=0)
-        weight = st.number_input("Measured weight (lbs)", min_value=0.0, step=5.0, value=185.0, format="%.1f")
-        reps = st.number_input("Reps performed to max", min_value=1, step=1, value=3)
-        add_on = st.number_input("Class add-on (+ lbs)", min_value=0.0, step=1.0, value=10.0, format="%.1f")
-        percent = st.number_input("Show % of 1RM (e.g., 60 = 60%)", min_value=1.0, max_value=120.0, step=1.0, value=60.0, format="%.0f")
-        show_common = st.checkbox("Show common % table (60–100%)", value=True)
-        # Optional sled weight for Leg Press so we can compute plate math
+    with st.container():
+        st.markdown("### Inputs")
+        # Give inline widgets unique keys to avoid any session clashes
+        ex = st.selectbox("Exercise", EXERCISES, index=0, key="ex_inline")
+        weight = st.number_input("Measured weight (lbs)", min_value=0.0, step=5.0, value=185.0,
+                                 format="%.1f", key="wt_inline")
+        reps = st.number_input("Reps performed to max", min_value=1, step=1, value=3, key="reps_inline")
+        add_on = st.number_input("Class add-on (+ lbs)", min_value=0.0, step=1.0, value=10.0,
+                                 format="%.1f", key="addon_inline")
+        percent = st.number_input("Show % of 1RM (e.g., 60 = 60%)", min_value=1.0, max_value=120.0,
+                                  step=1.0, value=60.0, format="%.0f", key="pct_inline")
+        show_common = st.checkbox("Show common % table (60–100%)", value=True, key="table_inline")
         sled = 0.0
         if ex == "Leg Press":
-            sled = st.number_input(
-                "Leg press sled weight (lb)",
-                min_value=0.0, step=5.0, value=0.0,
-                help="Enter your machine's empty sled weight to show plate math."
-            )
+            sled = st.number_input("Leg press sled weight (lb)", min_value=0.0, step=5.0, value=0.0,
+                                   help="Enter your machine's empty sled weight to show plate math.",
+                                   key="sled_inline")
 else:
     with st.sidebar:
         st.header("Inputs")
-        ex = st.selectbox("Exercise", EXERCISES, index=0)
-        weight = st.number_input("Measured weight (lbs)", min_value=0.0, step=5.0, value=185.0, format="%.1f")
-        reps = st.number_input("Reps performed to max", min_value=1, step=1, value=3)
-        add_on = st.number_input("Class add-on (+ lbs)", min_value=0.0, step=1.0, value=10.0, format="%.1f")
-        percent = st.number_input("Show % of 1RM (e.g., 60 = 60%)", min_value=1.0, max_value=120.0, step=1.0, value=60.0, format="%.0f")
-        show_common = st.checkbox("Show common % table (60–100%)", value=True)
-        # Optional sled weight for Leg Press so we can compute plate math
+        ex = st.selectbox("Exercise", EXERCISES, index=0, key="ex_side")
+        weight = st.number_input("Measured weight (lbs)", min_value=0.0, step=5.0, value=185.0,
+                                 format="%.1f", key="wt_side")
+        reps = st.number_input("Reps performed to max", min_value=1, step=1, value=3, key="reps_side")
+        add_on = st.number_input("Class add-on (+ lbs)", min_value=0.0, step=1.0, value=10.0,
+                                 format="%.1f", key="addon_side")
+        percent = st.number_input("Show % of 1RM (e.g., 60 = 60%)", min_value=1.0, max_value=120.0,
+                                  step=1.0, value=60.0, format="%.0f", key="pct_side")
+        show_common = st.checkbox("Show common % table (60–100%)", value=True, key="table_side")
         sled = 0.0
         if ex == "Leg Press":
-            sled = st.number_input(
-                "Leg press sled weight (lb)",
-                min_value=0.0, step=5.0, value=0.0,
-                help="Enter your machine's empty sled weight to show plate math."
-            )
-
+            sled = st.number_input("Leg press sled weight (lb)", min_value=0.0, step=5.0, value=0.0,
+                                   help="Enter your machine's empty sled weight to show plate math.",
+                                   key="sled_side")
 selected_ex_placeholder.markdown(f"## Exercise: {ex}")
 
 st.caption("Class rule uses measured weight **plus** the add-on (ignores reps)."
