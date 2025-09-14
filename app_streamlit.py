@@ -6,7 +6,9 @@ from one_rm_core import (
 )
 
 st.set_page_config(page_title="Class Workout 105 — 1RM Helper", layout="centered", initial_sidebar_state="expanded")
-
+# Read default from URL (?inline=1)
+qs = st.query_params
+default_inline = qs.get("inline", "0") == "1"
 # Read default from URL (?inline=1)
 qs = st.query_params
 default_inline = qs.get("inline", "0") == "1"
@@ -20,12 +22,28 @@ mobile_inputs = st.toggle(
     help="If the sidebar is hidden on a small screen, turn this on to show the inputs below."
 )
 
+# Only update the URL when the value actually changes (reduces iOS churn)
+want = "1" if st.session_state.get("inline_toggle") else None
+have = st.query_params.get("inline")
+if want != have:
+    if want == "1":
+        st.query_params["inline"] = "1"
+    else:
+        try:
+            del st.query_params["inline"]
+        except KeyError:
+            pass
+
 # Keep the URL in sync with the toggle so you can bookmark / add to Home Screen
 if st.session_state.get("inline_toggle"):
     st.query_params["inline"] = "1"
 else:
     st.query_params.pop("inline", None)
-
+if st.session_state.get("inline_toggle"):
+    st.markdown(
+        "<style>@media (max-width: 700px){section[data-testid='stSidebar']{display:none;}}</style>",
+        unsafe_allow_html=True
+    )
 EXERCISES = [
     "Bench Press",
     "Leg Press",
